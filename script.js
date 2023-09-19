@@ -2,9 +2,9 @@ const gridContainer = document.getElementById(`mainGrid`);
 const mainGrid = [];
 const windowHeight = window.innerHeight;
 const windowWidth = window.innerWidth;
-
 const xCells = Math.floor(windowWidth / 10);
 const yCells = Math.floor(windowHeight / 10);
+let stopRunning = false;
 
 // initialize the grid
 function init() {
@@ -60,6 +60,10 @@ function start() {
     }
   }
   draw();
+
+  if(!stopRunning){
+    setTimeout(start,100);
+  }
 }
 
 function checkNearby(y, x) {
@@ -79,13 +83,36 @@ function checkNearby(y, x) {
 
   return alive;
 }
+
+function RandomFill(){
+    for (let y = 0; y < yCells; y++) {
+        for (let x = 0; x < xCells; x++) {
+            mainGrid[y][x].mark = Math.floor(Math.random() * 2);
+        }
+    }                   
+    draw();
+}
+
+function clear(){
+    for (let y = 0; y < yCells; y++) {
+        for (let x = 0; x < xCells; x++) {
+            mainGrid[y][x].mark = false;   
+        }
+    }
+    draw();
+}
 const btn = document.getElementById(`start`);
 btn.addEventListener(`click`, function () {
-  for (let i = 0; i < 1000; i++) {
-    setInterval(function () {
-      start();
-    }, 500);
-  }
+    stopRunning = false;
+    start();
 });
+const random = document.getElementById(`random`);
+random.addEventListener(`click`,RandomFill);
+const stop = document.getElementById(`stop`);
+stop.addEventListener(`click`,function(){
+    stopRunning = true;
+});
+const clearBtn = document.getElementById(`clear`);
+clearBtn.addEventListener(`click`,clear);
 init();
 draw();
